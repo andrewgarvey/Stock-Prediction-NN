@@ -67,7 +67,7 @@ x_test_names = pd.DataFrame(x_test_norm, columns = x_test.columns)
 ## Done via recursive feature seleciton.
 
 estimator = LinearRegression() 
-rfe = RFE(estimator, n_features_to_select = 13)
+rfe = RFE(estimator, n_features_to_select = 14)  # actually not sure what is best
 selector = rfe.fit(x_train_names, np.ravel(y_train))
 
 
@@ -78,17 +78,26 @@ x_test_rfe = x_test_names.iloc[:,index]
 
 ## Done via primary component analysis 
 
-### explained variance 
-n_comp =15
-pca = PCA(n_components = n_comp)
-weights = pca.fit(x_train_names)
+### explained variance graph
+covar_mat = PCA(len(x_train_names.columns),random_state=random_state)
+covar_mat.fit(x_train_names)
 
-x_train_pca = weights.transform(x_train_names)
-x_test_pca = weights.transform(x_test_names)
+variance = covar_mat.explained_variance_ratio_
+var = np.cumsum(np.round(variance,3))
+var
+
+
+###doing pca with 11 gives 95% of variance still 
+n_comp =11 
+pca = PCA(n_components = n_comp)
+pca_fit = pca.fit(x_train_names)
+
+x_train_pca = pca_fit.transform(x_train_names)
+x_test_pca = pca_fit.transform(x_test_names)
+
 #------------------------------------------------------------------------------
 # GENERATING OUTPUT
-
-#choosing to use RFE for readability!! 
+# choosing to use RFE for readability!! 
 
 ## cbind X and Y 
 
