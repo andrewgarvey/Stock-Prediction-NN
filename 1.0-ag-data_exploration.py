@@ -37,35 +37,43 @@ train.head()
 train.describe().transpose()
 
 ## Count the missings
-train.isna().sum()
+train.isna().sum() 
 
-## Correlation Matrix, shamelessly stolen [1] (but this time a better one)
-
-f, ax = plt.subplots(figsize=(10, 8))
-corr = train.corr()
-sns.heatmap(corr, mask=np.zeros_like(corr, dtype=np.bool), cmap=sns.diverging_palette(220, 10, as_cmap=True), square=True, ax=ax)
-plt.savefig('1.0-ag-Correlation Matrix.png')
+## Correlation Matrix, shamelessly stolen again [1] (but this time a better one)
 plt.clf()
-#risk and return obv correlated,  productivity and Tobin's Q, nothing correlated with output
+f, ax = plt.subplots(figsize=(15, 15))
+corr = train.corr()
+sns.heatmap(corr, mask=np.zeros_like(corr, dtype=np.bool), cmap=sns.diverging_palette(220, 10, as_cmap=True), square=True, ax=ax, annot =True)
+plt.savefig('1.0-ag-Correlation Matrix.png')
+
+
 
 
 ## Some basic looking at output 
 
 returns=train.loc[:,'Output Return %']
-returns.describe().transpose()
+returns.describe().transpose()  
+#yeah we got a single value 93 std away, and the next one is 17 away... thats almost certainly a typo, should remove it
 
-
+plt.clf()
+plt.ylabel(' Frequency')
+plt.xlabel('Output Return %')
+plt.title('Frequency of Output Return %s')
 plt.hist(returns, bins=100, range= (-50,50))
 plt.savefig('1.0-ag-Output Return %.png')
-plt.clf()
+
 
 '''
 NOTES
 
 normalize via some sort of preproccessing thing, make it apply to both
 remove any really similarly correlated columns , done via RFE 
-Outliers ok with me, we have some real distinct data here 
+1 Outliers is ridic  
 
 REFERENCES
 [1] - https://stackoverflow.com/questions/29432629/correlation-matrix-using-pandas/31384328
 '''
+
+
+
+

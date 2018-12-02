@@ -45,6 +45,10 @@ random_state=123
 train = train.drop('Year',axis =1)
 test = test.drop('Year',axis =1)
 
+#drop the 1 super noticable outlier we saw in data exploration from train 
+train = train.loc[train['Output Return %']!=1100,:]
+
+
 ## split test/train X/Y
 x_train = train.drop('Output Return %',axis =1)
 y_train = train.loc[:,['Output Return %']]
@@ -67,7 +71,7 @@ x_test_names = pd.DataFrame(x_test_norm, columns = x_test.columns)
 ## Done via recursive feature seleciton.
 
 estimator = LinearRegression() 
-rfe = RFE(estimator, n_features_to_select = 14)  # actually not sure what is best
+rfe = RFE(estimator, n_features_to_select = 12)  # debatable if wanted to keep everything, this is just me #learning stuff  
 selector = rfe.fit(x_train_names, np.ravel(y_train))
 
 
@@ -86,7 +90,14 @@ variance = covar_mat.explained_variance_ratio_
 var = np.cumsum(np.round(variance,3))
 var
 
-
+#plot explained variance
+plt.clf
+plt.ylabel(' variance explained')
+plt.xlabel('# of features')
+plt.title('Variance explained vs # of features')
+plt.plot(var)
+plt.savefig('Variance vs # features.png')
+            
 ###doing pca with 11 gives 95% of variance still 
 n_comp =11 
 pca = PCA(n_components = n_comp)
@@ -97,7 +108,7 @@ x_test_pca = pca_fit.transform(x_test_names)
 
 #------------------------------------------------------------------------------
 # GENERATING OUTPUT
-# choosing to use RFE for readability!! 
+# choosing to use PCA because it does better for everything, could easily also have chosen nothing!
 
 ## cbind X and Y 
 
