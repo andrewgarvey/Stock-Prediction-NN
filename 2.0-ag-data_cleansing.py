@@ -18,14 +18,15 @@ import matplotlib.pyplot as plt
 #import other packages 
 from sklearn.preprocessing import StandardScaler
 from sklearn.feature_selection import RFE
-
+from sklearn.linear_model import LinearRegression
+from sklearn.decomposition import PCA
 
 
 #setup dir
 inputdir = 'D:\QUEENS MMAI\823 Finance\Assign\Assign2\Input'
 outputdir = 'D:\QUEENS MMAI\823 Finance\Assign\Assign2\Output'
 
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 # IMPORT FILES
 
 ## Read file(s) / directory management
@@ -35,39 +36,77 @@ train = pd.read_excel('A2trainData_MMAI.xlsx')
 os.chdir(outputdir)
 
 
-# drop year, can't even b
+#------------------------------------------------------------------------------
+# SPLITS AND NORMALIZATION
+
+random_state=123
+
+## drop year, I can't even
 train = train.drop('Year',axis =1)
 test = test.drop('Year',axis =1)
 
-
-
-#split test/train X/Y
+## split test/train X/Y
 x_train = train.drop('Output Return %',axis =1)
 y_train = train.loc[:,['Output Return %']]
 
 x_test = test.drop('Output Return %',axis =1)
 y_test = test.loc[:,['Output Return %']]
 
-# create standard scaler
+## use standard scaler to normalalize
 scaler = StandardScaler().fit(x_train)
 
-scaler.transform(x_train)
+x_train_norm = scaler.transform(x_train)
+x_test_norm = scaler.transform(x_test)
 
-#normalize via some sort of preproccessing thing
+x_train_names = pd.DataFrame(x_train_norm, columns = x_train.columns)
+x_test_names = pd.DataFrame(x_test_norm, columns = x_test.columns)
+
+#------------------------------------------------------------------------------
+## FEATURE SELECTION
+
+## Done via recursive feature seleciton.
+
+estimator = LinearRegression() 
+rfe = RFE(estimator, n_features_to_select = 13)
+selector = rfe.fit(x_train_names, np.ravel(y_train))
+
+
+index = selector.support_  
+x_train_rfe = x_train_names.iloc[:,index]
+x_test_rfe = x_test_names.iloc[:,index]
+
+
+## Done via primary component analysis 
+
+### explained variance 
+n_comp =15
+pca = PCA(n_components = n_comp)
+weights = pca.fit(x_train_names)
+
+x_train_pca = weights.transform(x_train_names)
+x_test_pca = weights.transform(x_test_names)
+#------------------------------------------------------------------------------
+# GENERATING OUTPUT
+
+#choosing to use RFE for readability!! 
+
+## cbind X and Y 
 
 
 
-#
+## output to csv
 
 
 
 
-#remove any really similarly correlated columns , done via RFE 
-#Outliers ok with me, we have some real distinct data here 
+
+'''
+NOTES:
+
+Should totally learn a pipeline for this one when modeling
 
 
-
-
+'''
 
 
 
