@@ -1,10 +1,18 @@
-print('hello worlds')
+'''
+Data exploration File for 823 Assign A2 
 
-a = 5 
+Author: Andrew Garvey
+Date : Dec 2nd, 2018
 
-print(a)
-
-print(a+1)
-
+'''
 
 
+#setup packages
+
+import numpy as np
+import pandas as pd
+
+#setup dir
+
+
+test = pd.read_excel 
