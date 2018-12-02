@@ -45,19 +45,19 @@ f, ax = plt.subplots(figsize=(10, 8))
 corr = train.corr()
 sns.heatmap(corr, mask=np.zeros_like(corr, dtype=np.bool), cmap=sns.diverging_palette(220, 10, as_cmap=True), square=True, ax=ax)
 plt.savefig('1.0-ag-Correlation Matrix.png')
-
+plt.clf()
 #risk and return obv correlated,  productivity and Tobin's Q, nothing correlated with output
 
 
 ## Some basic looking at output 
-plt.clf()
+
 returns=train.loc[:,'Output Return %']
 returns.describe().transpose()
 
-plt,
+
 plt.hist(returns, bins=100, range= (-50,50))
 plt.savefig('1.0-ag-Output Return %.png')
-
+plt.clf()
 
 '''
 NOTES
