@@ -53,7 +53,13 @@ plt.savefig('1.0-ag-Correlation Matrix.png')
 
 returns=train.loc[:,'Output Return %']
 returns.describe().transpose()  
-#yeah we got a single value 93 std away, and the next one is 17 away... thats almost certainly a typo, should remove it
+
+Z = (returns-np.mean(returns))/np.std(returns)
+Z = Z.sort_values()
+Z.head()
+Z.tail()
+#yeah we got a single value ~93 std away, and the next one is ~17 away... 
+#thats almost certainly a typo or something equally crazy, should remove it
 
 plt.clf()
 plt.ylabel(' Frequency')

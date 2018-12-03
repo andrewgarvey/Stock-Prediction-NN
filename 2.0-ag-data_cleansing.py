@@ -94,30 +94,31 @@ var
 plt.clf
 plt.ylabel(' variance explained')
 plt.xlabel('# of features')
-plt.title('Variance explained vs # of features')
+plt.title('variance explained vs # features')
 plt.plot(var)
-plt.savefig('Variance vs # features.png')
+plt.savefig('variance vs # features.png')
             
 ###doing pca with 11 gives 95% of variance still 
 n_comp =11 
 pca = PCA(n_components = n_comp)
 pca_fit = pca.fit(x_train_names)
 
-x_train_pca = pca_fit.transform(x_train_names)
-x_test_pca = pca_fit.transform(x_test_names)
+x_train_pca = pd.DataFrame(pca_fit.transform(x_train_names))
+x_test_pca = pd.DataFrame(pca_fit.transform(x_test_names))
 
 #------------------------------------------------------------------------------
 # GENERATING OUTPUT
-# choosing to use PCA because it does better for everything, could easily also have chosen nothing!
+# Choosing to use PCA as we have lots of decent correlations and i don't want to delete a bunch of them. 
+#  
 
 ## cbind X and Y 
 
-
-
+output_train = pd.concat([x_train_pca.reset_index(drop=True),y_train.reset_index(drop=True)],axis =1)
+output_test = pd.concat([x_test_pca.reset_index(drop=True),y_test.reset_index(drop=True)],axis =1)
 ## output to csv
 
-
-
+output_train.to_csv('2.0-ag-Train_Cleaned.csv')
+output_test.to_csv('2.0-ag-Test_Cleaned.csv')
 
 
 '''
