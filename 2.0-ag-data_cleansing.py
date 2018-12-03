@@ -101,7 +101,7 @@ plt.savefig('variance vs # features.png')
 ###doing pca with 11 gives 95% of variance still 
 n_comp =11 
 pca = PCA(n_components = n_comp)
-pca_fit = pca.fit(x_train_names)
+pca_fit = pca.fit(x_train_names) 
 
 x_train_pca = pd.DataFrame(pca_fit.transform(x_train_names))
 x_test_pca = pd.DataFrame(pca_fit.transform(x_test_names))
@@ -120,31 +120,9 @@ output_test = pd.concat([x_test_pca.reset_index(drop=True),y_test.reset_index(dr
 output_train.to_csv('2.0-ag-Train_Cleaned.csv')
 output_test.to_csv('2.0-ag-Test_Cleaned.csv')
 
-
 '''
 NOTES:
 
 Should totally learn a pipeline for this one when modeling
 
-
 '''
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

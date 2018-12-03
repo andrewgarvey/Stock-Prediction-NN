@@ -26,9 +26,19 @@ outputdir = 'D:\QUEENS MMAI\823 Finance\Assign\Assign2\Output'
 ## Read file(s) / directory management
 os.chdir(inputdir)
 train = pd.read_excel('A2trainData_MMAI.xlsx')
+test = pd.read_excel('A2testData_MMAI.xlsx')
 os.chdir(outputdir)
 
 #BASIC EXPLORING, using train stuff 
+
+train_year=train.loc[:,'Year']
+
+test_year=test.loc[:,'Year']
+
+plt.clf()
+plt.hist(train_year, bins=15)
+plt.clf()
+plt.hist(test_year, bins=15)
 
 ## head 
 train.head()
@@ -79,7 +89,5 @@ remove any really similarly correlated columns , done via RFE
 REFERENCES
 [1] - https://stackoverflow.com/questions/29432629/correlation-matrix-using-pandas/31384328
 '''
-
-
 
 
