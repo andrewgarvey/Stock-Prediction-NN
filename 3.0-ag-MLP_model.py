@@ -20,9 +20,10 @@ inputdir = 'D:\QUEENS MMAI\823 Finance\Assign\Assign2\Input'
 outputdir = 'D:\QUEENS MMAI\823 Finance\Assign\Assign2\Output'
 
 #import other packages 
-from sklearn.neural_network import MLPRegressor
 from sklearn.metrics import mean_squared_error, r2_score
-
+from sklearn.model_selection import GridSearchCV 
+from sklearn.neural_network import MLPRegressor
+from sklearn.pipeline import Pipeline
 
 #------------------------------------------------------------------------------
 # IMPORT FILES
@@ -48,18 +49,38 @@ y_train = train.loc[:,['Output Return %']]
 x_test = test.drop('Output Return %',axis =1)
 y_test = test.loc[:,['Output Return %']]
 
-
 #------------------------------------------------------------------------------
-# Regression Model
+# Make Regression Model
 start_time = time.time()
 
-mlp = MLPRegressor(random_state = random_state)
-mlp.fit(x_train,np.ravel(y_train))
+mlp = MLPRegressor(random_state = random_state)  #initialize step(s)
 
-prediction = mlp.predict(x_test)
+pipe = Pipeline(steps=[('mlp',mlp)]) # group steps into pipe
 
-plt.plot(prediction, y_test, '.')
+param_grid = {                       #params for various step(s) 
+    'mlp__hidden_layer_sizes' : [(10,),(1,)]                            
+        
+        
+               
+}               
 
-mean_squared_error(y_test,prediction), r2_score(y_test, prediction)
+reg = GridSearchCV(pipe,param_grid=param_grid,cv=2,scoring = 'neg_mean_squared_error',n_jobs=-1, verbose =3) # make GridSearch
 
-print("--- %s seconds ---" % (time.time() - start_time))
+reg.fit(x_train,np.ravel(y_train))  # fit model 
+
+pred = reg.predict(x_test)
+#------------------------------------------------------------------------------
+# Evaluate Model performance 
+
+
+
+r2 = r2_score(y_test,pred)
+mse = mean_squared_error(y_test,pred)
+
+print(r2)
+print(-1*reg.best_score_)
+print(mse)
+print(reg.best_params_)
+
+
+print("--- %s seconds ---" % (time.time() - start_time)) #output time for curiosity 
