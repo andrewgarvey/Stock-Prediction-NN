@@ -67,7 +67,7 @@ param_grid = {                       #params for various step(s)
 }               
 
 
-reg = GridSearchCV(pipe,param_grid=param_grid,cv=2,scoring = 'neg_mean_squared_error',n_jobs=-1, verbose =10) # make GridSearch
+reg = GridSearchCV(pipe,param_grid=param_grid,cv=2,scoring = 'neg_mean_squared_error',n_jobs=-1, verbose =1000000) # make GridSearch
 
 reg.fit(x_train,np.ravel(y_train))  # fit model 
 
