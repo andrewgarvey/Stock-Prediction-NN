@@ -55,16 +55,19 @@ start_time = time.time()
 
 mlp = MLPRegressor(random_state = random_state)  #initialize step(s)
 
-pipe = Pipeline(steps=[('mlp',mlp)]) # group steps into pipe
+pipe = Pipeline(steps=[('mlp',mlp)]) # group step(s) into pipe
 
 param_grid = {                       #params for various step(s) 
-    'mlp__hidden_layer_sizes' : [(10,),(1,)]                            
-        
-        
-               
+    'mlp__hidden_layer_sizes' : [(100,100,100)],                            
+    'mlp__activation':  ['logistic','tanh'],
+    'mlp__solver': ['sgd','adam'],
+    'mlp__learning_rate' : ['adaptive','constant'],
+    'mlp__max_iter' : [200],
+    'mlp__batch_size' : ['auto']
 }               
 
-reg = GridSearchCV(pipe,param_grid=param_grid,cv=2,scoring = 'neg_mean_squared_error',n_jobs=-1, verbose =3) # make GridSearch
+
+reg = GridSearchCV(pipe,param_grid=param_grid,cv=2,scoring = 'neg_mean_squared_error',n_jobs=-1, verbose =10) # make GridSearch
 
 reg.fit(x_train,np.ravel(y_train))  # fit model 
 
@@ -72,15 +75,10 @@ pred = reg.predict(x_test)
 #------------------------------------------------------------------------------
 # Evaluate Model performance 
 
-
-
-r2 = r2_score(y_test,pred)
-mse = mean_squared_error(y_test,pred)
-
-print(r2)
-print(-1*reg.best_score_)
-print(mse)
 print(reg.best_params_)
+print(-1*reg.best_score_)
 
+print(mean_squared_error(y_test,pred))
+print(r2_score(y_test,pred))
 
 print("--- %s seconds ---" % (time.time() - start_time)) #output time for curiosity 
