@@ -51,12 +51,13 @@ returns=train.loc[:,'Output Return %']
 
 Z = (returns-np.mean(returns))/np.std(returns)
 
+
+
 indexA = Z>=-6 
 indexB = Z<=6
-
 index = indexA & indexB
 
-train = train.loc[index=True,:]
+train = train.loc[index,:]
 
 
 ## split test/train X/Y
@@ -79,7 +80,7 @@ x_test_names = pd.DataFrame(x_test_norm, columns = x_test.columns)
 ## FEATURE SELECTION
 
 ## Done via recursive feature seleciton.
-
+'''
 estimator = LinearRegression() 
 rfe = RFE(estimator, n_features_to_select = 12)  # debatable if wanted to keep everything, this is just me #learning stuff  
 selector = rfe.fit(x_train_names, np.ravel(y_train))
@@ -115,7 +116,7 @@ pca_fit = pca.fit(x_train_names)
 
 x_train_pca = pd.DataFrame(pca_fit.transform(x_train_names))
 x_test_pca = pd.DataFrame(pca_fit.transform(x_test_names))
-
+'''
 #------------------------------------------------------------------------------
 # GENERATING OUTPUT
 # Choosing to use PCA as we have lots of decent correlations and i don't want to delete a bunch of them. 
@@ -123,8 +124,8 @@ x_test_pca = pd.DataFrame(pca_fit.transform(x_test_names))
 
 ## cbind X and Y 
 
-output_train = pd.concat([x_train_pca.reset_index(drop=True),y_train.reset_index(drop=True)],axis =1)
-output_test = pd.concat([x_test_pca.reset_index(drop=True),y_test.reset_index(drop=True)],axis =1)
+output_train = pd.concat([x_train_names.reset_index(drop=True),y_train.reset_index(drop=True)],axis =1)
+output_test = pd.concat([x_test_names.reset_index(drop=True),y_test.reset_index(drop=True)],axis =1)
 ## output to csv
 
 output_train.to_csv('2.0-ag-Train_Cleaned.csv')
