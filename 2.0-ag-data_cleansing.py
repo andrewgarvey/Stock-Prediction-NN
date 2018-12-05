@@ -45,8 +45,18 @@ random_state=123
 train = train.drop('Year',axis =1)
 test = test.drop('Year',axis =1)
 
-#drop the 1 super noticable outlier we saw in data exploration from train 
-train = train.loc[train['Output Return %']!=1100,:]
+#drop the >6sd things we saw in data exploration from train 
+returns=train.loc[:,'Output Return %']
+
+
+Z = (returns-np.mean(returns))/np.std(returns)
+
+indexA = Z>=-6 
+indexB = Z<=6
+
+index = indexA & indexB
+
+train = train.loc[index=True,:]
 
 
 ## split test/train X/Y
