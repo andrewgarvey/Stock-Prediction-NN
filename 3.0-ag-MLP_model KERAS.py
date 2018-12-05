@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 '''
 Data cleansing File for 823 Assign A2, using keras this time  
-
 Author: Andrew Garvey
 Date : Dec 3rd, 2018
-
 '''
 
 #import standard packages
@@ -22,6 +20,8 @@ from keras.wrappers.scikit_learn import KerasRegressor
 from keras.optimizers import SGD
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import mean_squared_error, r2_score
+import pickle
+
 
 #setup dir
 inputdir = 'D:\QUEENS MMAI\823 Finance\Assign\Assign2\Input'
@@ -33,7 +33,6 @@ os.chdir(inputdir)
 test = pd.read_csv('2.0-ag-Test_Cleaned_6sd.csv',index_col = 0)
 train = pd.read_csv('2.0-ag-Train_Cleaned_6sd.csv',index_col = 0)
 os.chdir(outputdir)
-
 
 #------------------------------------------------------------------------------
 # Global Vars
@@ -49,23 +48,21 @@ y_test = test.loc[:,['Output Return %']]
 
 #------------------------------------------------------------------------------
 # Make Regression Model
-start_time = time.time()
 
-def create_model(momentum = 0.0 , n_hidden_layers= 1, n_neurons_L1 = 1, n_neurons_L2 =1 , activation = 'relu', dropout_rate = 0.0,loss = 'mean_squared_error', epochs = 10, batch_size = 200, learn_rate=0.001 ):
-	
+def create_model(momentum, n_hidden_layers, n_neurons_L1, n_neurons_L2, activation, dropout_rate,loss, epochs, batch_size,learn_rate):
 	if n_hidden_layers ==1 :
-        #make
+		#make
 		model = Sequential()
 		model.add(Dense(n_neurons_L1, input_dim=15, activation= activation))
 		model.add(Dropout(dropout_rate))
 		model.add(Dense(1, activation=activation))
 		#compile
 		optimizer = SGD(lr=learn_rate, momentum = momentum)
-		model.compile(loss= loss, optimizer= optimizer, metrics=['mae'])
+		model.compile(loss= loss, optimizer= optimizer, metrics=['mse'])
 		return model
 
 	else:  
-        #make
+		#make
 		model = Sequential()
 		model.add(Dense(n_neurons_L1, input_dim=15, activation= activation))
 		model.add(Dropout(dropout_rate))
@@ -74,9 +71,8 @@ def create_model(momentum = 0.0 , n_hidden_layers= 1, n_neurons_L1 = 1, n_neuron
 		model.add(Dense(1, activation=activation))
 		#compile
 		optimizer = SGD(lr=learn_rate, momentum = momentum)
-		model.compile(loss= loss, optimizer= optimizer, metrics=['mae'])
+		model.compile(loss= loss, optimizer= optimizer, metrics=['mse'])
 		return model
-
 
 
 # Seed
@@ -88,11 +84,25 @@ model = KerasRegressor(build_fn=create_model,  epochs=10, batch_size = 10, verbo
 
 # define the grid search parameters
 
+'''
+ # CAC version 
+n_hidden_layers = [1,2]
+n_neurons_L1 = [2,5,10] 
+n_neurons_L2 = [2,5,10]
+activation = ['sigmoid','relu']
+learn_rate = [0.1,0.01,0.001]
+dropout_rate = [0.0,0.2,0.4]
+epochs = [10,50,100]
+batch_size = [200,500]
+loss = ['mean_squared_error']
+momentum = [0.0,0.2]
+'''
 
-n_hidden_layers = [2]
-n_neurons_L1 = [7] 
-n_neurons_L2 = [7]
-activation = ['sigmoid']
+# my comp version
+n_hidden_layers = [1]
+n_neurons_L1 = [2] 
+n_neurons_L2 = [2]
+activation = ['relu']
 learn_rate = [0.1]
 dropout_rate = [0.2]
 epochs = [10]
@@ -114,10 +124,17 @@ param_grid = dict(n_hidden_layers = n_hidden_layers,
                   )
 
 
-grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1,verbose=10, cv=2)
-grid_result = grid.fit(x_train,np.ravel(y_train))
+grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=1,verbose=1, cv=2)
+
+
+grid = grid.fit(x_train,np.ravel(y_train))
+
+
 
 pred = grid.predict(x_test)
+
+
+print(pred)
 
 print(grid.best_params_)
 print(-1*grid.best_score_)
@@ -126,6 +143,8 @@ print(mean_squared_error(y_test,pred))
 print(r2_score(y_test,pred))
 
 
+pkl_filename = "final_model.pkl"  
+with open(pkl_filename, 'wb') as file:  
+    pickle.dump(model, file)
 
 
-print("--- %s seconds ---" % (time.time() - start_time)) #output time for curiosity 
