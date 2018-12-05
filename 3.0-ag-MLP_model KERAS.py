@@ -52,8 +52,9 @@ y_test = test.loc[:,['Output Return %']]
 start_time = time.time()
 
 def create_model(momentum = 0.0 , n_hidden_layers= 1, n_neurons_L1 = 1, n_neurons_L2 =1 , activation = 'relu', dropout_rate = 0.0,loss = 'mean_squared_error', epochs = 10, batch_size = 200, learn_rate=0.001 ):
-	#make
+	
 	if n_hidden_layers ==1 :
+        #make
 		model = Sequential()
 		model.add(Dense(n_neurons_L1, input_dim=15, activation= activation))
 		model.add(Dropout(dropout_rate))
@@ -63,7 +64,8 @@ def create_model(momentum = 0.0 , n_hidden_layers= 1, n_neurons_L1 = 1, n_neuron
 		model.compile(loss= loss, optimizer= optimizer, metrics=['mae'])
 		return model
 
-	else:    
+	else:  
+        #make
 		model = Sequential()
 		model.add(Dense(n_neurons_L1, input_dim=15, activation= activation))
 		model.add(Dropout(dropout_rate))
@@ -87,12 +89,12 @@ model = KerasRegressor(build_fn=create_model,  epochs=10, batch_size = 10, verbo
 # define the grid search parameters
 
 
-n_hidden_layers = [1,2]
-n_neurons_L1 = [2] 
-n_neurons_L2 = [2]
-activation = ['relu']
-learn_rate = [0.001]
-dropout_rate = [0.0]
+n_hidden_layers = [2]
+n_neurons_L1 = [7] 
+n_neurons_L2 = [7]
+activation = ['sigmoid']
+learn_rate = [0.1]
+dropout_rate = [0.2]
 epochs = [10]
 batch_size = [200]
 loss = ['mean_squared_error']
@@ -112,7 +114,7 @@ param_grid = dict(n_hidden_layers = n_hidden_layers,
                   )
 
 
-grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=1,verbose=10, cv=2)
+grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1,verbose=10, cv=2)
 grid_result = grid.fit(x_train,np.ravel(y_train))
 
 pred = grid.predict(x_test)
