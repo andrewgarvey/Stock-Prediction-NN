@@ -17,8 +17,9 @@ import matplotlib.pyplot as plt
 
 #import other packages 
 from keras.models import Sequential 
-from keras.layers import Dense
+from keras.layers import Dense, Dropout
 from keras.wrappers.scikit_learn import KerasRegressor
+from keras.optimizers import SGD
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import mean_squared_error, r2_score
 
@@ -50,20 +51,33 @@ y_test = test.loc[:,['Output Return %']]
 # Make Regression Model
 start_time = time.time()
 
-#STOLEN MOSTLY RIGHT NOW 
-
-# Function to create model, required for KerasClassifier
-def create_model():
+def create_model(momentum = 0.0 , n_hidden_layers= 1, n_neurons_L1 = 1, n_neurons_L2 =1 , activation = 'relu', dropout_rate = 0.0,loss = 'mean_squared_error', epochs = 10, batch_size = 200, learn_rate=0.001 ):
 	#make
-	model = Sequential()
-	model.add(Dense(12, input_dim=15, activation='relu'))
-	model.add(Dense(1, activation='sigmoid'))
+	if n_hidden_layers ==1 :
+		model = Sequential()
+		model.add(Dense(n_neurons_L1, input_dim=15, activation= activation))
+		model.add(Dropout(dropout_rate))
+		model.add(Dense(1, activation=activation))
+		#compile
+		optimizer = SGD(lr=learn_rate, momentum = momentum)
+		model.compile(loss= loss, optimizer= optimizer, metrics=['mae'])
+		return model
 
-	#compile
-	model.compile(loss='mean_squared_error', optimizer='adam', metrics=['mae'])
-	return model
+	else:    
+		model = Sequential()
+		model.add(Dense(n_neurons_L1, input_dim=15, activation= activation))
+		model.add(Dropout(dropout_rate))
+		model.add(Dense(n_neurons_L2, activation= activation))
+		model.add(Dropout(dropout_rate))
+		model.add(Dense(1, activation=activation))
+		#compile
+		optimizer = SGD(lr=learn_rate, momentum = momentum)
+		model.compile(loss= loss, optimizer= optimizer, metrics=['mae'])
+		return model
 
-# fix random seed for reproducibility
+
+
+# Seed
 seed = 123
 np.random.seed(seed)
 
@@ -73,28 +87,38 @@ model = KerasRegressor(build_fn=create_model,  epochs=10, batch_size = 10, verbo
 # define the grid search parameters
 
 
-#hidden_size = [1,2]
-n_neurons_L1 = [1,5,10] 
-#n_neurons_L2 = [1,5,10]
-
-activation = ['relu','sigmoid']
-learn_rate = [0.001, 0.01]
-dropout_rate = [0.0, 0.2]
+n_hidden_layers = [1,2]
+n_neurons_L1 = [2] 
+n_neurons_L2 = [2]
+activation = ['relu']
+learn_rate = [0.001]
+dropout_rate = [0.0]
 epochs = [10]
 batch_size = [200]
-
+loss = ['mean_squared_error']
+momentum = [0.0]
 
 #param grid
-param_grid = dict(batch_size=batch_size, epochs=epochs)
+param_grid = dict(n_hidden_layers = n_hidden_layers,
+                  n_neurons_L1 = n_neurons_L1,
+                  n_neurons_L2 = n_neurons_L2,
+                  activation = activation,
+                  learn_rate = learn_rate,
+                  momentum = momentum,
+                  dropout_rate = dropout_rate,
+                  epochs = epochs,
+                  batch_size = batch_size,
+                  loss = loss
+                  )
 
 
-grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=1,verbose=10)
+grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=1,verbose=10, cv=2)
 grid_result = grid.fit(x_train,np.ravel(y_train))
 
 pred = grid.predict(x_test)
 
-print(reg.best_params_)
-print(-1*reg.best_score_)
+print(grid.best_params_)
+print(-1*grid.best_score_)
 
 print(mean_squared_error(y_test,pred))
 print(r2_score(y_test,pred))
