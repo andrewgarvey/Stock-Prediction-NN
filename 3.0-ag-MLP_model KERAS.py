@@ -99,11 +99,11 @@ momentum = [0.0,0.2]
 '''
 
 # my comp version
-n_hidden_layers = [1]
-n_neurons_L1 = [2] 
-n_neurons_L2 = [2]
+n_hidden_layers = [1,2]
+n_neurons_L1 = [2,5,10] 
+n_neurons_L2 = [2,5,10]
 activation = ['relu']
-learn_rate = [0.1]
+learn_rate = [0.1,0.01]
 dropout_rate = [0.2]
 epochs = [10]
 batch_size = [200]

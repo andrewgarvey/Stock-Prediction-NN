@@ -31,8 +31,8 @@ from sklearn.pipeline import Pipeline
 
 ## Read file(s) / directory management
 os.chdir(inputdir)
-test = pd.read_csv('2.0-ag-Test_Cleaned.csv',index_col = 0)
-train = pd.read_csv('2.0-ag-Train_Cleaned.csv',index_col = 0)
+test = pd.read_csv('2.0-ag-Test_Cleaned_6sd.csv',index_col = 0)
+train = pd.read_csv('2.0-ag-Train_Cleaned_6sd.csv',index_col = 0)
 os.chdir(outputdir)
 
 
@@ -67,7 +67,7 @@ param_grid = {                       #params for various step(s)
 }               
 
 
-reg = GridSearchCV(pipe,param_grid=param_grid,cv=2,scoring = 'neg_mean_squared_error',n_jobs=-1, verbose =10) # make GridSearch
+reg = GridSearchCV(pipe,param_grid=param_grid,cv=2,scoring = 'neg_mean_squared_error',n_jobs=-1, verbose =1) # make GridSearch
 
 reg.fit(x_train,np.ravel(y_train))  # fit model 
 

@@ -75,19 +75,13 @@ plt.clf()
 plt.ylabel(' Frequency')
 plt.xlabel('Output Return %')
 plt.title('Frequency of Output Return %s')
-plt.hist(returns, bins=100, range= (-50,50))
+plt.hist(returns, bins=50, range= (-50,50))
 plt.savefig('1.0-ag-Output Return %.png')
 
 
 '''
 NOTES
 
-normalize via some sort of preproccessing thing, make it apply to both
-remove any really similarly correlated columns , done via RFE 
-1 Outliers is ridic  
-
-REFERENCES
-[1] - https://stackoverflow.com/questions/29432629/correlation-matrix-using-pandas/31384328
 '''
 
 
