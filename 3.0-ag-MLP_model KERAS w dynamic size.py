@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-Data cleansing File for 823 Assign A2, using keras this time  
+Data cleansing File for 823 Assign A2, using keras this time, dynamic version
 Author: Andrew Garvey
 Date : Dec 3rd, 2018
 '''
@@ -23,12 +23,24 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 
 
-# -----------------------------------------------------------------------------
 ## Read file(s) / directory management
 
+# CAC 
 test = pd.read_csv('2.0-ag-Test_Cleaned_6sd.csv',index_col = 0)
 train = pd.read_csv('2.0-ag-Train_Cleaned_6sd.csv',index_col = 0)
 
+#Local 
+'''
+#setup dir
+inputdir = 'D:\QUEENS MMAI\823 Finance\Assign\Assign2\Input'
+outputdir = 'D:\QUEENS MMAI\823 Finance\Assign\Assign2\Output'
+
+## Read file(s) / directory management
+os.chdir(inputdir)
+test = pd.read_csv('2.0-ag-Test_Cleaned_6sd.csv',index_col = 0)
+train = pd.read_csv('2.0-ag-Train_Cleaned_6sd.csv',index_col = 0)
+os.chdir(outputdir)
+'''
 
 #------------------------------------------------------------------------------
 # Global Vars
