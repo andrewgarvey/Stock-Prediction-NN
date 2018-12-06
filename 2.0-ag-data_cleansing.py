@@ -119,8 +119,6 @@ x_test_pca = pd.DataFrame(pca_fit.transform(x_test_names))
 '''
 #------------------------------------------------------------------------------
 # GENERATING OUTPUT
-# Choosing to use PCA as we have lots of decent correlations and i don't want to delete a bunch of them. 
-  
 
 ## cbind X and Y 
 
@@ -134,7 +132,6 @@ output_test.to_csv('2.0-ag-Test_Cleaned.csv')
 '''
 NOTES:
 
-Should totally learn a pipeline for this one when modeling
 
 '''
 
