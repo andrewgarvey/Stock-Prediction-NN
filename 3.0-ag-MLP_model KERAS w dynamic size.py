@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 '''
-Data cleansing File for 823 Assign A2, using keras this time, dynamic version
+Data Modeling File for 823 Assign A2 
 Author: Andrew Garvey
-Date : Dec 3rd, 2018
+Date : Dec 6th, 2018
 '''
 
 #import standard packages
@@ -21,26 +21,13 @@ from keras.optimizers import SGD
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import mean_squared_error, r2_score
 
-
-
+# THIS WAS RUN ON THE CAC
+# -----------------------------------------------------------------------------
 ## Read file(s) / directory management
 
-# CAC 
 test = pd.read_csv('2.0-ag-Test_Cleaned_6sd.csv',index_col = 0)
 train = pd.read_csv('2.0-ag-Train_Cleaned_6sd.csv',index_col = 0)
 
-#Local 
-'''
-#setup dir
-inputdir = 'D:\QUEENS MMAI\823 Finance\Assign\Assign2\Input'
-outputdir = 'D:\QUEENS MMAI\823 Finance\Assign\Assign2\Output'
-
-## Read file(s) / directory management
-os.chdir(inputdir)
-test = pd.read_csv('2.0-ag-Test_Cleaned_6sd.csv',index_col = 0)
-train = pd.read_csv('2.0-ag-Train_Cleaned_6sd.csv',index_col = 0)
-os.chdir(outputdir)
-'''
 
 #------------------------------------------------------------------------------
 # Global Vars
@@ -63,12 +50,12 @@ def create_model(momentum, n_hidden_layers, n_neurons_L1, n_neurons_middle, acti
     model.add(Dense(n_neurons_L1, input_dim=15, activation= activation))
     model.add(Dropout(dropout_rate))
     
-    '''
+    
     #make hidden layers
     for i in range(n_hidden_layers):
         model.add(Dense(n_neurons_middle, activation=activation))
         model.add(Dropout(dropout_rate))
-    '''
+    
     
     #make output layers
     model.add(Dense(1, activation=activation))
@@ -78,7 +65,7 @@ def create_model(momentum, n_hidden_layers, n_neurons_L1, n_neurons_middle, acti
     return model
 
 
-
+#------------------------------------------------------------------------------
 # Seed
 seed = 123
 np.random.seed(seed)
@@ -87,8 +74,6 @@ np.random.seed(seed)
 model = KerasRegressor(build_fn=create_model,  epochs=10, batch_size = 10, verbose=0)
 
 # define the grid search parameters
-
-
 n_hidden_layers = [0,1]
 n_neurons_L1 = [5,10] 
 n_neurons_middle = [5,10]
@@ -115,9 +100,12 @@ param_grid = dict(n_hidden_layers = n_hidden_layers,
                   )
 
 
-grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=20,verbose=1, cv=2)
+grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1,verbose=1, cv=2)
+
 
 fit_model = grid.fit(x_train,np.ravel(y_train))
+#------------------------------------------------------------------------------
+#Results
 
 pred = fit_model.predict(x_test)
 
