@@ -107,7 +107,7 @@ fit_model = grid.fit(x_train,np.ravel(y_train))
 #------------------------------------------------------------------------------
 #Results
 
-pred = fit_model.predict(x_test)
+pred = fit_model.predict(x_test) 
 
 
 print(fit_model.best_params_)
