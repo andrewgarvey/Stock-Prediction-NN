@@ -1,7 +1,4 @@
 # Predict Stock Market Using NN
-
-Author: Andrew Garvey
-
 Date: Nov-Dec 2018 
 
 Languages: Python, Jupyter Notebook
