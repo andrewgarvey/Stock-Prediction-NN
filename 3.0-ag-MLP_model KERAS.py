@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-Data cleansing File for 823 Assign A2, using keras this time  
-Author: Andrew Garvey
+Data cleansing File using Keras  
 Date : Dec 3rd, 2018
 '''
 
