@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-Data exploration File for 823 Assign A2 
-
-Author: Andrew Garvey
 Date : Dec 2nd, 2018
-
 '''
 
 #setup packages
