@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-Data Modeling File for 823 Assign A2 
-Author: Andrew Garvey
+Data Modeling 
 Date : Dec 6th, 2018
 '''
 
