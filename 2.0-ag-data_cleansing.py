@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 '''
-Data cleansing File for 823 Assign A2 
-
-Author: Andrew Garvey
+Data cleansing File
 Date : Dec 2nd, 2018
-
 '''
 
 #import standard packages
@@ -129,11 +126,7 @@ output_test = pd.concat([x_test_names.reset_index(drop=True),y_test.reset_index(
 output_train.to_csv('2.0-ag-Train_Cleaned.csv')
 output_test.to_csv('2.0-ag-Test_Cleaned.csv')
 
-'''
-NOTES:
 
-
-'''
 
 
 
